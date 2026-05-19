@@ -1,0 +1,331 @@
+<div class="p-lg md:p-container-margin flex flex-col gap-xl">
+  <!-- Header Section -->
+  <div class="flex justify-between items-end">
+    <div>
+      <h2 class="font-headline-md text-headline-md text-on-surface font-semibold">Overview</h2>
+      <p class="font-body-sm text-body-sm text-on-surface-variant">
+        Live stock metrics and recent activities.
+      </p>
+    </div>
+  </div>
+
+  <!-- Stat Cards Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-lg">
+    <!-- Total Products -->
+    <div
+      class="bg-surface-container-low border border-white/5 rounded-xl p-md flex flex-col gap-md relative overflow-hidden group hover:bg-surface-container/60 transition-colors"
+    >
+      <div class="flex justify-between items-start">
+        <div
+          class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20"
+        >
+          <span class="material-symbols-outlined text-primary text-[20px]">inventory_2</span>
+        </div>
+      </div>
+      <div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mb-xs">Total Products</p>
+        <h3 class="font-data-mono text-data-mono text-[24px] font-bold text-on-surface">
+          {{ totalProducts() | number }}
+        </h3>
+      </div>
+    </div>
+
+    <!-- Low Stock Items -->
+    <div
+      class="bg-surface-container-low border border-white/5 rounded-xl p-md flex flex-col gap-md relative overflow-hidden group hover:bg-surface-container/60 transition-colors"
+    >
+      <div class="flex justify-between items-start">
+        <div
+          class="w-10 h-10 rounded-lg bg-tertiary/10 flex items-center justify-center border border-tertiary/20"
+        >
+          <span class="material-symbols-outlined text-tertiary text-[20px]">warning</span>
+        </div>
+      </div>
+      <div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mb-xs">Low Stock Items</p>
+        <h3 class="font-data-mono text-data-mono text-[24px] font-bold text-on-surface">
+          {{ lowStockCount() }}
+        </h3>
+      </div>
+    </div>
+
+    <!-- Critical Depletion -->
+    <div
+      class="bg-surface-container-low border border-white/5 rounded-xl p-md flex flex-col gap-md relative overflow-hidden group hover:bg-surface-container/60 transition-colors"
+    >
+      <div class="flex justify-between items-start">
+        <div
+          class="w-10 h-10 rounded-lg bg-error/10 flex items-center justify-center border border-error/20"
+        >
+          <span class="material-symbols-outlined text-error text-[20px]">error</span>
+        </div>
+      </div>
+      <div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mb-xs">Critical Depletion</p>
+        <h3 class="font-data-mono text-data-mono text-[24px] font-bold text-on-surface">
+          {{ criticalStockCount() }}
+        </h3>
+      </div>
+    </div>
+
+    <!-- Est. Inventory Value -->
+    <div
+      class="bg-surface-container-low border border-white/5 rounded-xl p-md flex flex-col gap-md relative overflow-hidden group hover:bg-surface-container/60 transition-colors"
+    >
+      <div class="flex justify-between items-start">
+        <div
+          class="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center border border-secondary/20"
+        >
+          <span class="material-symbols-outlined text-secondary text-[20px]">payments</span>
+        </div>
+      </div>
+      <div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mb-xs">Est. Inventory Value</p>
+        <h3 class="font-data-mono text-data-mono text-[24px] font-bold text-on-surface">
+          ${{ totalValue() >= 1000000 ? (totalValue() / 1000000 | number: '1.2-2') + 'M' : (totalValue() | number: '1.2-2') }}
+        </h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Inventory Section -->
+  <div class="flex flex-col gap-lg">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-md">
+      <div>
+        <h2 class="font-headline-md text-headline-md text-on-surface font-semibold tracking-tight">
+          Product Inventory
+        </h2>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">
+          Manage your stock levels, pricing, and product details.
+        </p>
+      </div>
+      <div class="flex items-center gap-md">
+        <div
+          class="flex items-center w-full md:w-80 bg-surface-container border border-white/5 focus-within:border-primary/30 rounded-lg px-md py-sm transition-all"
+        >
+          <span class="material-symbols-outlined text-on-surface-variant text-[20px] mr-sm"
+            >search</span
+          >
+          <input
+            class="w-full bg-transparent border-none outline-none text-body-sm text-on-surface placeholder:text-on-surface-variant/50 focus:ring-0"
+            placeholder="Search products..."
+            type="text"
+            (input)="onSearch($event)"
+          />
+        </div>
+        <button
+          class="flex items-center gap-sm bg-primary text-on-primary hover:brightness-110 px-lg py-sm rounded-lg transition-all font-label-uppercase text-label-uppercase shadow-lg shadow-primary/10"
+          routerLink="/product-form"
+        >
+          <span class="material-symbols-outlined text-[18px]">add</span>
+          Add Product
+        </button>
+      </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="flex flex-wrap items-center gap-sm">
+      <button
+        class="px-lg py-sm rounded-full border border-primary bg-primary/10 text-primary font-label-uppercase text-[10px]"
+      >
+        All Products
+      </button>
+      <button
+        class="px-lg py-sm rounded-full border border-white/5 bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-uppercase text-[10px] transition-colors"
+      >
+        Electronics
+      </button>
+      <button
+        class="px-lg py-sm rounded-full border border-white/5 bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-uppercase text-[10px] transition-colors"
+      >
+        Apparel
+      </button>
+      <button
+        class="px-lg py-sm rounded-full border border-white/5 bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-uppercase text-[10px] transition-colors"
+      >
+        Home & Office
+      </button>
+      <div class="ml-auto">
+        <button
+          class="flex items-center gap-xs text-on-surface-variant hover:text-on-surface font-label-uppercase text-[10px] transition-colors"
+        >
+          <span class="material-symbols-outlined text-[18px]">filter_list</span>
+          More Filters
+        </button>
+      </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="bg-surface-container-low border border-white/5 rounded-xl overflow-hidden shadow-xl">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-white/5 bg-surface-container/50">
+              <th
+                class="py-lg px-lg font-label-uppercase text-label-uppercase text-on-surface-variant whitespace-nowrap w-12 font-medium"
+              >
+                Image
+              </th>
+              <th
+                class="py-lg px-lg font-label-uppercase text-label-uppercase text-on-surface-variant whitespace-nowrap font-medium"
+              >
+                Name
+              </th>
+              <th
+                class="py-lg px-lg font-label-uppercase text-label-uppercase text-on-surface-variant whitespace-nowrap font-medium"
+              >
+                Category
+              </th>
+              <th
+                class="py-lg px-lg font-label-uppercase text-label-uppercase text-on-surface-variant whitespace-nowrap text-right font-medium"
+              >
+                Quantity
+              </th>
+              <th
+                class="py-lg px-lg font-label-uppercase text-label-uppercase text-on-surface-variant whitespace-nowrap text-right font-medium"
+              >
+                Price
+              </th>
+              <th
+                class="py-lg px-lg font-label-uppercase text-label-uppercase text-on-surface-variant whitespace-nowrap font-medium"
+              >
+                Status
+              </th>
+              <th
+                class="py-lg px-lg font-label-uppercase text-label-uppercase text-on-surface-variant whitespace-nowrap text-right font-medium"
+              >
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/5 font-body-md text-on-surface">
+            @for (product of filteredProducts(); track product.id) {
+              <tr
+                class="hover:bg-white/5 transition-colors group cursor-pointer"
+                [routerLink]="['/product-details', product.id]"
+              >
+                <td class="py-md px-lg">
+                  <div
+                    class="w-12 h-12 rounded-lg bg-surface-container border border-white/5 overflow-hidden"
+                  >
+                    @if (product.imageUrl) {
+                      <img
+                        [src]="product.imageUrl"
+                        [alt]="product.name"
+                        class="w-full h-full object-cover"
+                      />
+                    } @else {
+                      <div class="w-full h-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-on-surface-variant"
+                          >inventory_2</span
+                        >
+                      </div>
+                    }
+                  </div>
+                </td>
+                <td class="py-md px-lg text-on-surface-variant font-medium">
+                  {{ product.name }}
+                </td>
+                <td class="py-md px-lg text-on-surface-variant font-body-sm">
+                  {{ product.category }}
+                </td>
+                <td
+                  class="py-md px-lg text-right font-data-mono text-on-surface-variant text-opacity-80"
+                >
+                  {{ product.quantity }}
+                </td>
+                <td
+                  class="py-md px-lg text-right font-data-mono text-on-surface-variant text-opacity-80"
+                >
+                  {{ product.price | currency }}
+                </td>
+                <td class="py-md px-lg">
+                  @let status = getStatus(product.quantity);
+                  <span
+                    class="inline-flex items-center px-sm py-xs rounded-full font-label-uppercase text-[10px] gap-xs border"
+                    [class.bg-secondary/10]="status === 'Available'"
+                    [class.text-secondary]="status === 'Available'"
+                    [class.border-secondary/20]="status === 'Available'"
+                    [class.bg-tertiary/10]="status === 'Low Stock'"
+                    [class.text-tertiary]="status === 'Low Stock'"
+                    [class.border-tertiary/20]="status === 'Low Stock'"
+                    [class.bg-error/10]="status === 'Out of Stock'"
+                    [class.text-error]="status === 'Out of Stock'"
+                    [class.border-error/20]="status === 'Out of Stock'"
+                  >
+                    <span
+                      class="w-1.5 h-1.5 rounded-full"
+                      [class.bg-secondary]="status === 'Available'"
+                      [class.bg-tertiary]="status === 'Low Stock'"
+                      [class.bg-error]="status === 'Out of Stock'"
+                    ></span>
+                    {{ status }}
+                  </span>
+                </td>
+                <td class="py-md px-lg text-right">
+                  <div
+                    class="flex items-center justify-end gap-sm group-hover:opacity-100 transition-opacity"
+                  >
+                    <button
+                      class="p-xs text-on-surface-variant hover:text-primary transition-all"
+                      [routerLink]="['/product-form', product.id]"
+                      (click)="$event.stopPropagation()"
+                    >
+                      <span class="material-symbols-outlined text-[20px]">edit</span>
+                    </button>
+                    <button
+                      class="p-xs text-on-surface-variant hover:text-error transition-all"
+                      (click)="onDelete(product.id!); $event.stopPropagation()"
+                    >
+                      <span class="material-symbols-outlined text-[20px]">delete</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="7" class="py-xl text-center text-on-surface-variant">
+                  No products found.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex items-center justify-between text-on-surface-variant font-body-sm pb-xl">
+      <span
+        >Showing <span class="text-on-surface font-semibold">1-{{ filteredProducts().length }}</span> of
+        <span class="text-on-surface font-semibold">{{ totalProducts() }}</span> products</span
+      >
+      <div class="flex items-center gap-xs">
+        <button
+          class="p-sm rounded hover:bg-white/5 transition-colors disabled:opacity-30"
+          disabled=""
+        >
+          <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+        </button>
+        <button
+          class="w-10 h-10 rounded-lg bg-primary/20 text-primary font-bold flex items-center justify-center border border-primary/20"
+        >
+          1
+        </button>
+        <button
+          class="w-10 h-10 rounded-lg hover:bg-white/5 transition-colors flex items-center justify-center text-on-surface-variant"
+        >
+          2
+        </button>
+        <button
+          class="w-10 h-10 rounded-lg hover:bg-white/5 transition-colors flex items-center justify-center text-on-surface-variant"
+        >
+          3
+        </button>
+        <button class="p-sm rounded hover:bg-white/5 transition-colors">
+          <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
