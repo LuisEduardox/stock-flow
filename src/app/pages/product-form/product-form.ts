@@ -36,10 +36,15 @@ export class ProductForm implements OnInit {
     if (id) {
       this.isEdit.set(true);
       this.productId.set(id);
-      const product = this.productService.getProductById(id);
-      if (product) {
-        this.productForm.patchValue(product);
+      const product = this.productService.getProductById(id).subscribe({
+        next: (products) => {
+        console.log(products);
+        const product = products[0];
+        if (product) {
+          this.productForm.patchValue(product);
+        }
       }
+    });
     }
   }
 
